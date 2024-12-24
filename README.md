@@ -1,6 +1,7 @@
 ## CodeGator.EntityFrameworkCore.Cryptography: 
 ---
 
+[![Build Status](https://dev.azure.com/codegator/CodeGator.EntityFrameworkCore.Cryptography/_apis/build/status%2FCodeGator.CodeGator.EntityFrameworkCore.Cryptography?branchName=main)](https://dev.azure.com/codegator/CodeGator.EntityFrameworkCore.Cryptography/_build/latest?definitionId=120&branchName=main)
 
 #### What does it do?
 This package contains cryptography extensions for the Microsoft.EntityFrameworkCore library that are used by various CodeGator solutions.
