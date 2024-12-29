@@ -85,7 +85,14 @@ internal sealed class ProtectionProvider
                 );
         }
 
-        var credentials = options.Value.Credentials.DistinctBy(x => x.Name)
+        // Debugging note: The options here have duplicate entries for the 
+        //   provider credentials. Microsoft assures us (I can't remember 
+        //   the link, you can Google for it) that this is "by design" and
+        //   completely normal. In any event, when you see multiple entries
+        //   for each provider here, it's not our code that's broken, it's
+        //   .NET. What's more, that bug is, apparently, "by design".
+
+        var credentials = options.Value.Credentials
             .FirstOrDefault(x => x.Name.Equals(
                 name, 
                 StringComparison.InvariantCultureIgnoreCase
