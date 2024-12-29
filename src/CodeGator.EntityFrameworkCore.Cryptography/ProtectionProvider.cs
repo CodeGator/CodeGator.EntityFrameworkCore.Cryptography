@@ -73,7 +73,10 @@ internal sealed class ProtectionProvider
 
         using var scope = ServiceLocator.Instance().CreateScope();
         
-        var options = scope.ServiceProvider.GetRequiredService<IOptions<ProtectionProviderOptions>>();
+        var options = scope.ServiceProvider.GetRequiredService<
+            IOptions<ProtectionProviderOptions>
+            >();
+
         if (options is null)
         {
             throw new InvalidDataException(
@@ -83,7 +86,7 @@ internal sealed class ProtectionProvider
         }
 
         var credentials = options.Value.Credentials.FirstOrDefault(x => 
-            x.Name == name
+            x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)
             );
         if (credentials is null)
         {
@@ -98,7 +101,10 @@ internal sealed class ProtectionProvider
             rfc2898Iterations = 15000;
         }
 
-        var cryptoService = scope.ServiceProvider.GetRequiredService<ICryptoService>();
+        var cryptoService = scope.ServiceProvider.GetRequiredService<
+            ICryptoService
+            >();
+
         _keyAndIV = cryptoService.GenerateKeyAndIVAsync(
             credentials.Password,
             credentials.SALT,
@@ -125,10 +131,10 @@ internal sealed class ProtectionProvider
         [NotNull] string name = "Default"
         )
     {
-        if (!_instances.TryGetValue(name, out var provider))
+        if (!_instances.TryGetValue(name.ToLower(), out var provider))
         {
             provider = new ProtectionProvider(name);
-            _instances.TryAdd(name, provider);
+            _instances.TryAdd(name.ToLower(), provider);
         }
         return provider;
     }
@@ -147,7 +153,10 @@ internal sealed class ProtectionProvider
         try
         {
             using var scope = ServiceLocator.Instance().CreateScope();
-            var cryptoService = scope.ServiceProvider.GetRequiredService<ICryptoService>();
+            
+            var cryptoService = scope.ServiceProvider.GetRequiredService<
+                ICryptoService
+                >();
 
             var encValue = cryptoService.AesEncryptAsync(
                 _keyAndIV,
@@ -179,7 +188,10 @@ internal sealed class ProtectionProvider
         try
         {
             using var scope = ServiceLocator.Instance().CreateScope();
-            var cryptoService = scope.ServiceProvider.GetRequiredService<ICryptoService>();
+            
+            var cryptoService = scope.ServiceProvider.GetRequiredService<
+                ICryptoService
+                >();
 
             var encValue = cryptoService.AesEncryptAsync(
                 _keyAndIV,
@@ -211,7 +223,10 @@ internal sealed class ProtectionProvider
         try
         {
             using var scope = ServiceLocator.Instance().CreateScope();
-            var cryptoService = scope.ServiceProvider.GetRequiredService<ICryptoService>();
+            
+            var cryptoService = scope.ServiceProvider.GetRequiredService<
+                ICryptoService
+                >();
 
             var decValue = cryptoService.AesDecryptAsync(
                 _keyAndIV,
@@ -243,7 +258,9 @@ internal sealed class ProtectionProvider
         try
         {
             using var scope = ServiceLocator.Instance().CreateScope();
-            var cryptoService = scope.ServiceProvider.GetRequiredService<ICryptoService>();
+            var cryptoService = scope.ServiceProvider.GetRequiredService<
+                ICryptoService
+                >();
 
             var decValue = cryptoService.AesDecryptAsync(
                 _keyAndIV,
@@ -278,7 +295,7 @@ internal sealed class ProtectionProvider
     /// whenever the <paramref name="name"/> has already been used.
     private static void ThrowIfNameHasAlreadyBeenUsed(string name)
     {
-        if (_instances.ContainsKey(name))
+        if (_instances.ContainsKey(name.ToLower()))
         {
             throw new ArgumentException(
                 paramName: nameof(name),
