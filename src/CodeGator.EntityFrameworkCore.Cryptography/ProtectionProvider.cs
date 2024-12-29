@@ -85,8 +85,11 @@ internal sealed class ProtectionProvider
                 );
         }
 
-        var credentials = options.Value.Credentials.FirstOrDefault(x => 
-            x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)
+        var credentials = options.Value.Credentials.DistinctBy(x => x.Name)
+            .FirstOrDefault(x => x.Name.Equals(
+                name, 
+                StringComparison.InvariantCultureIgnoreCase
+                )
             );
         if (credentials is null)
         {
@@ -258,6 +261,7 @@ internal sealed class ProtectionProvider
         try
         {
             using var scope = ServiceLocator.Instance().CreateScope();
+            
             var cryptoService = scope.ServiceProvider.GetRequiredService<
                 ICryptoService
                 >();
@@ -292,7 +296,7 @@ internal sealed class ProtectionProvider
     /// </summary>
     /// <param name="name">The name to use for the operation.</param>
     /// <exception cref="ArgumentException">This exception is thrown 
-    /// whenever the <paramref name="name"/> has already been used.
+    /// whenever the <paramref name="name"/> has already been used.</exception>
     private static void ThrowIfNameHasAlreadyBeenUsed(string name)
     {
         if (_instances.ContainsKey(name.ToLower()))

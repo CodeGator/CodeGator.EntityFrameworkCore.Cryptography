@@ -18,7 +18,7 @@ internal sealed class ProtectedStringConverter : ValueConverter<string?, string>
         [NotNull] string providerName = "Default",
         [AllowNull] ConverterMappingHints? mappingHints = null
         ) : base(
-                x => ProtectionProvider.Instance(providerName).Encrypt(x),
+                x => ProtectionProvider.Instance(providerName).Encrypt(x ?? ""),
                 x => ProtectionProvider.Instance(providerName).Decrypt(x),
                 mappingHints
             )

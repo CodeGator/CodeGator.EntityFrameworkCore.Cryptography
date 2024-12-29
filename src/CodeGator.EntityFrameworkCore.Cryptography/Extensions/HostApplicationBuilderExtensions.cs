@@ -39,7 +39,7 @@ public static partial class HostApplicationBuilderExtensions
             "Adding options for the CodeGator EFCORE data protection provider."
             );
 
-        hostApplicationBuilder.Services.AddOptions<ProtectionProviderOptions>()
+        hostApplicationBuilder.Services.TryAddOptions<ProtectionProviderOptions>()
             .BindConfiguration(ProtectionProviderOptions.SectionPath)
             .ValidateDataAnnotations()
             .ValidateOnStart();
