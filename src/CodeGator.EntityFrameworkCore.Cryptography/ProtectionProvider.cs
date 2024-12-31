@@ -90,10 +90,10 @@ internal sealed class ProtectionProvider
         //   the link, you can Google for it) that this is "by design" and
         //   completely normal. In any event, when you see multiple entries
         //   for each provider here, it's not our code that's broken, it's
-        //   .NET. What's more, that bug is, apparently, "by design".
+        //   .NET. 
 
-        var credentials = options.Value.Credentials
-            .FirstOrDefault(x => x.Name.Equals(
+        var credentials = options.Value.Credentials.FirstOrDefault(x => 
+            x.Name.Equals(
                 name, 
                 StringComparison.InvariantCultureIgnoreCase
                 )
@@ -105,10 +105,10 @@ internal sealed class ProtectionProvider
                 );
         }
 
-        var rfc2898Iterations = credentials.Rfc2898Iterations ?? 15000;
-        if (rfc2898Iterations < 15000)
+        var rfc2898Iterations = credentials.Rfc2898Iterations ?? 10000;
+        if (rfc2898Iterations < 10000)
         {
-            rfc2898Iterations = 15000;
+            rfc2898Iterations = 10000;
         }
 
         var cryptoService = scope.ServiceProvider.GetRequiredService<
